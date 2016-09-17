@@ -11923,7 +11923,11 @@ Standard deviation of prices: $165,171.13
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer: </strong>The feature 'RM', representing the average number of rooms among homes in the neighborhood, might have a high direct correlation to price. Houses tend to be as big as the ones in the neighborhood, so intuitively I'd say a low 'RM' value means that houses in the vicinity are smaller, therefore less valuable, whereas neighborhoods with large 'RM' value will tend to have bigger houses, thus more expensive.</p>
+<p><strong>Answer: </strong>The feature 'RM', representing the average number of rooms among homes in the neighborhood, might have a high direct correlation to price. Houses tend to be as big as the ones in the neighborhood, so intuitively I'd say a low 'RM' value means that houses in the vicinity are smaller, therefore less valuable, whereas neighborhoods with large 'RM' value will tend to have bigger houses, thus more expensive.
+LSTATS, representing the percentage of lower class workers, appears to have an inverse correlation to 'MEDV'. The higher percentage of lower class in the vicinity, the lower the price will be.
+At last, PTRATIO ,representing the ratio between students and teachers, also might have an inverse correlation to 'MEDV'. The more students per teacher, the lower the value of the properties in the neighborhood.
+It also worth noting that the features hold correlations between themselves as well, since smaller houses, thus cheaper, usually attracts lower class workers, crowding the vicinity and inflating schools with children.
+The opposite also applies: big houses attract fewer people because only a few can afford them, which in turn decreases the number of households in the vicinity and diminish the number of students in the schools.</p>
 
 </div>
 </div>
@@ -13259,9 +13263,9 @@ k0kAAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong>I choose the chart with max_depth = 3, because it's the simplest model that reaches very good accuracy on testing set.</p>
-<p>In all charts, except max_depth=10, it can be seen that the more data the training set has, the worse off the score is. The reason is because the decision tree fails to classify the data with increasing information. This is the high bias case, or underfitting. As max_depth is increased, the decision tree can better describe the data.</p>
+<p>In all charts, except max_depth=10, it can be seen that the more data the training set has, the worse off the score is. The reason is because the decision tree fails to classify the training set with increasing information. This is the high bias case, or underfitting. As max_depth is increased, the decision tree can better describe the data and the score loss due to bigger training set is diminished.</p>
 <p>The testing curve gets a big benefit of having more data. The more data on the testing set, the more reliable the score will be. With enough data, the score on test sets converge to a fixed range. However increasing max_depth might not be so helpful to the testing set score, since it could overfit the training set, thus predicting poorly the testing set.</p>
-<p>Overall, the more training points, the better. It ensures the obtained scores will be correct. Also it's worth noting that adding more data to an already big dataset will yield smaller gains.</p>
+<p>Overall, too few data points will have a poor effect, the model will fail to describe the dataset (high bias problem). Adding more data points to the problem will help the high bias issue, but only for a certain extent. Add too much data and the score trend could diverge. Also having too much data is computationally expensive, so the ideal world is too determine in which point the score converges and choose the lowest data points that achieve the highest score on testing set.</p>
 
 </div>
 </div>
@@ -13807,8 +13811,9 @@ I came to this conclusion because for a maximum depth greater or lesser than 4, 
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer: </strong>The grid search technique allows a single model to be trained in many different settings simultaneously and then yields the best setting, based on scores.
-By using the grid search, the data scientist can test many configurations at once and pick the best one without much hassle doing manual analisys.</p>
+<p><strong>Answer: </strong> The grid search is an interface of classification models of the same kind that differ only by a set of parameters. A parameter of a model is simply a input given to the model to help the learning and prediction processes. For instance a decision tree has a max depth parameter, that controls what maximum depth the internal search algorithm should go to make a prediction.
+In a sense, the grid search technique acts like a model, but under the hood is a set of models, and returns the better performing one.
+By using the grid search, one can test many values of the parameters required by a model at once and pick the best one without much hassle doing manual analisys.</p>
 
 </div>
 </div>
@@ -13831,7 +13836,8 @@ By using the grid search, the data scientist can test many configurations at onc
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong>The k-Fold algorithm helps splitting the dataset into training and testing sets. 
 Without training and testing sets, the grid search technique would always return the most complex model, that overfits the data and fails to generalise for unseen data.</p>
-<p>Also, the k-Fold cross-validation training technique maximizes training and testing set roles in the learning process. By taking k folds, k - 1 of these as training set and the reamining one as testing, and then rotating the folds to get an averaged score, the final score will have a higher relevance.</p>
+<p>Also, the k-Fold cross-validation training technique maximizes training and testing sets roles in the learning process.
+To illustrate why this maximization is beneficial, let's imagine how the standard training/testing split works: a percentage of the data must be chosen to split the data and usually this choice is complicated. Having more data to train the model is good, but having less testing data points will increase the variance in the testing set. However less training data might cause underfitting. To simplify what's the best ratio to be chosen, k-fold offers to data scientists another way of splitting the data: by choosing the number of folds. By taking k folds, k - 1 of these will serve as training set and the reamining one as testing and 2 scores will be returned, one for each of the sets. Then the folds will be rotated and this process repeated, until all folds have been served as training and testing sets. In the end, there will be "k" training scores and "k" testing scores. These will be then averaged and returned as a final score for the training and testing sets.</p>
 
 </div>
 </div>
@@ -13866,7 +13872,7 @@ Without training and testing sets, the grid search technique would always return
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import &#39;make_scorer&#39;, &#39;DecisionTreeRegressor&#39;, and &#39;GridSearchCV&#39;</span>
@@ -13891,7 +13897,7 @@ Without training and testing sets, the grid search technique would always return
     <span class="n">scoring_fnc</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">performance_metric</span><span class="p">)</span>
 
     <span class="c1"># TODO: Create the grid search object</span>
-    <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">regressor</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring_fnc</span><span class="p">)</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">regressor</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring_fnc</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv_sets</span><span class="p">)</span>
 
     <span class="c1"># Fit the grid search object to the data to compute the optimal model</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
